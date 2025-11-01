@@ -1,276 +1,483 @@
 <!DOCTYPE html>
-import React, { useState } from 'react';
-import { DollarSign, TrendingUp, Users, Database, AlertCircle } from 'lucide-react';
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know Your Data Worth - GAIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-export default function DataWorthCalculator() {
-  const [inputs, setInputs] = useState({
-    redditPosts: 0,
-    redditComments: 0,
-    twitterTweets: 0,
-    facebookPosts: 0,
-    instagramPosts: 0,
-    tiktokVideos: 0,
-    youtubeComments: 0,
-    linkedinPosts: 0,
-    mediumArticles: 0,
-    discordMessages: 0,
-    twitchStreams: 0,
-    amazonPurchases: 0,
-    githubContributions: 0,
-    stackoverflowAnswers: 0,
-    yearsActive: 1
-  });
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
 
-  // Pricing based on actual reported deals and estimates
-  const pricing = {
-    redditPost: 0.05,      // Based on Reddit-Google $60M deal
-    redditComment: 0.02,
-    twitterTweet: 0.03,    // Conservative estimate
-    facebookPost: 0.04,
-    instagramPost: 0.06,   // Higher value for images
-    tiktokVideo: 0.10,     // Premium for video + engagement data
-    youtubeComment: 0.02,
-    githubContribution: 0.15, // Code is premium
-    stackoverflowAnswer: 0.25  // Technical knowledge premium
-  };
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  const calculate = () => {
-    const base = (
-      inputs.redditPosts * pricing.redditPost +
-      inputs.redditComments * pricing.redditComment +
-      inputs.twitterTweets * pricing.twitterTweet +
-      inputs.facebookPosts * pricing.facebookPost +
-      inputs.instagramPosts * pricing.instagramPost +
-      inputs.tiktokVideos * pricing.tiktokVideo +
-      inputs.youtubeComments * pricing.youtubeComment +
-      inputs.githubContributions * pricing.githubContribution +
-      inputs.stackoverflowAnswers * pricing.stackoverflowAnswer
-    );
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
 
-    // Multiply by years for cumulative value
-    const cumulative = base * inputs.yearsActive;
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #FF0033;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
 
-    // Training value multiplier (data used multiple times)
-    const trainingValue = cumulative * 5;
+        .subtitle {
+            font-size: 1.25rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
 
-    // Future value (ongoing commercial use)
-    const futureValue = cumulative * 10;
+        .description {
+            font-size: 1rem;
+            color: #999;
+        }
 
-    return {
-      immediate: base,
-      cumulative: cumulative,
-      training: trainingValue,
-      future: futureValue,
-      total: base + cumulative + trainingValue + futureValue
-    };
-  };
+        .platform-count {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 10px;
+        }
 
-  const results = calculate();
+        .alert-box {
+            background: rgba(255, 0, 51, 0.1);
+            border: 2px solid #FF0033;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
 
-  const handleChange = (field, value) => {
-    setInputs(prev => ({
-      ...prev,
-      [field]: parseInt(value) || 0
-    }));
-  };
+        .alert-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
 
-  const platforms = [
-    { name: 'Reddit Posts', field: 'redditPosts', icon: '💬' },
-    { name: 'Reddit Comments', field: 'redditComments', icon: '💭' },
-    { name: 'Twitter/X Tweets', field: 'twitterTweets', icon: '🐦' },
-    { name: 'Facebook Posts', field: 'facebookPosts', icon: '👥' },
-    { name: 'Instagram Posts', field: 'instagramPosts', icon: '📸' },
-    { name: 'TikTok Videos', field: 'tiktokVideos', icon: '🎵' },
-    { name: 'YouTube Comments', field: 'youtubeComments', icon: '🎥' },
-    { name: 'GitHub Contributions', field: 'githubContributions', icon: '💻' },
-    { name: 'Stack Overflow Answers', field: 'stackoverflowAnswers', icon: '📚' }
-  ];
+        .alert-content p {
+            color: #ddd;
+            font-size: 1rem;
+        }
 
-  return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-black text-red-600 mb-4">
-            KNOW YOUR DATA WORTH
-          </h1>
-          <p className="text-xl text-gray-300 mb-2">
-            They're getting rich off your free labor.
-          </p>
-          <p className="text-lg text-gray-400">
-            Calculate what Big Tech owes you for training their AI models.
-          </p>
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .input-section, .results-section {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            background: #000;
+            border: 2px solid #444;
+            border-radius: 4px;
+            padding: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FF0033;
+        }
+
+        .total-value {
+            background: #FF0033;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .total-label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .total-amount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .total-subtext {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .breakdown {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: #ccc;
+        }
+
+        .breakdown-value {
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .info-box {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .info-box h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            color: #ccc;
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .info-box strong {
+            color: #fff;
+        }
+
+        .cta-box {
+            background: rgba(255, 0, 51, 0.1);
+            border: 2px solid #FF0033;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .cta-box h3 {
+            font-size: 1.125rem;
+            margin-bottom: 15px;
+        }
+
+        .cta-box ul {
+            list-style: none;
+        }
+
+        .cta-box li {
+            font-size: 0.875rem;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        .methodology {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .methodology h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .methodology p {
+            color: #ccc;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+        }
+
+        .methodology .highlight {
+            color: #FF0033;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.875rem;
+            padding: 40px 0 20px;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KNOW YOUR DATA WORTH</h1>
+            <p class="subtitle">They're getting rich off your free labor.</p>
+            <p class="description">Calculate what Big Tech owes you for training their AI models.</p>
+            <p class="platform-count">14 platforms tracked • Purchase history • Streaming data</p>
         </div>
 
-        {/* Alert Box */}
-        <div className="bg-red-600 bg-opacity-20 border-2 border-red-600 rounded-lg p-6 mb-8">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="text-red-600 flex-shrink-0 mt-1" size={24} />
-            <div>
-              <h3 className="font-bold text-lg mb-2">The Reality:</h3>
-              <p className="text-gray-200">
-                Reddit sold user data to Google for $60M/year. OpenAI scraped the entire internet. 
-                Meta trained Llama on your posts. You created this value. You got $0.
-              </p>
+        <div class="alert-box">
+            <div class="alert-content">
+                <h3>⚠️ The Reality:</h3>
+                <p>Reddit sold user data to Google for $60M/year. OpenAI scraped the entire internet. Meta trained Llama on your posts. You created this value. You got $0.</p>
             </div>
-          </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Input Section */}
-          <div className="bg-gray-900 rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Database className="text-red-600" />
-              Your Contributions
-            </h2>
-
-            <div className="space-y-4 mb-6">
-              {platforms.map(platform => (
-                <div key={platform.field}>
-                  <label className="block text-sm font-medium mb-2 text-gray-300">
-                    {platform.icon} {platform.name}
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={inputs[platform.field]}
-                    onChange={(e) => handleChange(platform.field, e.target.value)}
-                    className="w-full bg-black border-2 border-gray-700 rounded px-4 py-2 text-white focus:border-red-600 focus:outline-none"
-                    placeholder="0"
-                  />
-                </div>
-              ))}
-
-              <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">
-                  ⏰ Years Active Online
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="30"
-                  value={inputs.yearsActive}
-                  onChange={(e) => handleChange('yearsActive', e.target.value)}
-                  className="w-full bg-black border-2 border-gray-700 rounded px-4 py-2 text-white focus:border-red-600 focus:outline-none"
-                  placeholder="1"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Results Section */}
-          <div className="space-y-6">
-            {/* Total Value */}
-            <div className="bg-red-600 rounded-lg p-8 text-center">
-              <DollarSign className="mx-auto mb-4" size={48} />
-              <h2 className="text-lg font-medium mb-2">YOUR TOTAL DATA VALUE</h2>
-              <div className="text-5xl font-black mb-2">
-                ${results.total.toLocaleString(undefined, {maximumFractionDigits: 0})}
-              </div>
-              <p className="text-sm opacity-90">That's what they owe you.</p>
-            </div>
-
-            {/* Breakdown */}
-            <div className="bg-gray-900 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <TrendingUp className="text-red-600" />
-                Value Breakdown
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                  <span className="text-gray-300">Immediate Content Value</span>
-                  <span className="font-bold text-lg">
-                    ${results.immediate.toLocaleString(undefined, {maximumFractionDigits: 0})}
-                  </span>
+        <div class="main-grid">
+            <div class="input-section">
+                <h2 class="section-title">📊 Your Contributions</h2>
+                
+                <div class="input-group">
+                    <label>💬 Reddit Posts</label>
+                    <input type="number" id="redditPosts" min="0" value="0" oninput="calculate()">
                 </div>
 
-                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                  <span className="text-gray-300">Cumulative Over Time</span>
-                  <span className="font-bold text-lg">
-                    ${results.cumulative.toLocaleString(undefined, {maximumFractionDigits: 0})}
-                  </span>
+                <div class="input-group">
+                    <label>💭 Reddit Comments</label>
+                    <input type="number" id="redditComments" min="0" value="0" oninput="calculate()">
                 </div>
 
-                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                  <span className="text-gray-300">Training Value (5x multiplier)</span>
-                  <span className="font-bold text-lg">
-                    ${results.training.toLocaleString(undefined, {maximumFractionDigits: 0})}
-                  </span>
+                <div class="input-group">
+                    <label>🐦 Twitter/X Tweets</label>
+                    <input type="number" id="twitterTweets" min="0" value="0" oninput="calculate()">
                 </div>
 
-                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                  <span className="text-gray-300">Future Commercial Use (10x)</span>
-                  <span className="font-bold text-lg">
-                    ${results.future.toLocaleString(undefined, {maximumFractionDigits: 0})}
-                  </span>
+                <div class="input-group">
+                    <label>👥 Facebook Posts</label>
+                    <input type="number" id="facebookPosts" min="0" value="0" oninput="calculate()">
                 </div>
-              </div>
+
+                <div class="input-group">
+                    <label>📸 Instagram Posts</label>
+                    <input type="number" id="instagramPosts" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>🎵 TikTok Videos</label>
+                    <input type="number" id="tiktokVideos" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>🎥 YouTube Comments</label>
+                    <input type="number" id="youtubeComments" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>💼 LinkedIn Posts</label>
+                    <input type="number" id="linkedinPosts" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>✍️ Medium Articles</label>
+                    <input type="number" id="mediumArticles" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>💬 Discord Messages</label>
+                    <input type="number" id="discordMessages" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>🎮 Twitch Streams (hours)</label>
+                    <input type="number" id="twitchStreams" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>📦 Amazon Purchases</label>
+                    <input type="number" id="amazonPurchases" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>💻 GitHub Contributions</label>
+                    <input type="number" id="githubContributions" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>📚 Stack Overflow Answers</label>
+                    <input type="number" id="stackoverflowAnswers" min="0" value="0" oninput="calculate()">
+                </div>
+
+                <div class="input-group">
+                    <label>⏰ Years Active Online</label>
+                    <input type="number" id="yearsActive" min="1" max="30" value="1" oninput="calculate()">
+                </div>
             </div>
 
-            {/* What This Means */}
-            <div className="bg-gray-900 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Users className="text-red-600" />
-                What This Means
-              </h3>
-              
-              <div className="space-y-3 text-sm text-gray-300">
-                <p>
-                  <strong className="text-white">Training Value:</strong> Your data is used repeatedly to train multiple models. Each use multiplies its value.
-                </p>
-                <p>
-                  <strong className="text-white">Future Value:</strong> Companies will profit from your content for years. This is conservative—actual value is likely higher.
-                </p>
-                <p>
-                  <strong className="text-white">Your Labor:</strong> Every post, comment, and contribution is unpaid labor that generates billions in corporate profit.
-                </p>
-              </div>
-            </div>
+            <div class="results-section">
+                <div class="total-value">
+                    <p class="total-label">YOUR TOTAL DATA VALUE</p>
+                    <div class="total-amount" id="totalValue">$0</div>
+                    <p class="total-subtext">That's what they owe you.</p>
+                </div>
 
-            {/* Call to Action */}
-            <div className="bg-red-600 bg-opacity-10 border-2 border-red-600 rounded-lg p-6">
-              <h3 className="font-bold text-lg mb-3">What You Can Do:</h3>
-              <ul className="space-y-2 text-sm">
-                <li>✊ <strong>Stop giving it away free</strong> - Use platforms with fair data policies</li>
-                <li>🔒 <strong>Delete/edit old content</strong> - Make their datasets incomplete</li>
-                <li>🤝 <strong>Join the data strike</strong> - Collective action has power</li>
-                <li>🛠️ <strong>Contribute to ethical alternatives</strong> - Help build people's AI</li>
-                <li>📢 <strong>Demand compensation</strong> - Your data, your choice</li>
-              </ul>
+                <div class="breakdown">
+                    <h3 class="section-title">📈 Value Breakdown</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Immediate Content Value</span>
+                        <span class="breakdown-value" id="immediateValue">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Cumulative Over Time</span>
+                        <span class="breakdown-value" id="cumulativeValue">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Training Value (5x multiplier)</span>
+                        <span class="breakdown-value" id="trainingValue">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Future Commercial Use (10x)</span>
+                        <span class="breakdown-value" id="futureValue">$0</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>👥 What This Means</h3>
+                    <p><strong>Training Value:</strong> Your data is used repeatedly to train multiple models. Each use multiplies its value.</p>
+                    <p><strong>Future Value:</strong> Companies will profit from your content for years. This is conservative—actual value is likely higher.</p>
+                    <p><strong>Your Labor:</strong> Every post, comment, and contribution is unpaid labor that generates billions in corporate profit.</p>
+                </div>
+
+                <div class="cta-box">
+                    <h3>What You Can Do:</h3>
+                    <ul>
+                        <li>✊ <strong>Stop giving it away free</strong> - Use platforms with fair data policies</li>
+                        <li>🔒 <strong>Delete/edit old content</strong> - Make their datasets incomplete</li>
+                        <li>🤝 <strong>Join the data strike</strong> - Collective action has power</li>
+                        <li>🛠️ <strong>Contribute to ethical alternatives</strong> - Help build people's AI</li>
+                        <li>📢 <strong>Demand compensation</strong> - Your data, your choice</li>
+                    </ul>
+                </div>
             </div>
-          </div>
         </div>
 
-        {/* Methodology */}
-        <div className="mt-12 bg-gray-900 rounded-lg p-6">
-          <h3 className="text-xl font-bold mb-4">Methodology</h3>
-          <div className="text-sm text-gray-300 space-y-2">
-            <p>
-              <strong>Base Values:</strong> Derived from public AI training deals (Reddit-Google $60M/year), 
-              estimated per-user contributions, and academic research on data valuation.
-            </p>
-            <p>
-              <strong>Multipliers:</strong> Account for repeated use in training (5x), ongoing commercial 
-              licensing and deployment (10x), and cumulative value over time.
-            </p>
-            <p>
-              <strong>Conservative Estimates:</strong> These numbers are likely LOWER than actual value. 
-              Companies don't disclose true data valuations. Your real worth is probably higher.
-            </p>
-            <p className="text-red-600 font-bold mt-4">
-              Bottom Line: You've been working for free. They've been getting rich. Time to change that.
-            </p>
-          </div>
+        <div class="methodology">
+            <h3>Methodology</h3>
+            <p><strong>Base Values:</strong> Derived from public AI training deals (Reddit-Google $60M/year), estimated per-user contributions, and academic research on data valuation.</p>
+            <p><strong>Multipliers:</strong> Account for repeated use in training (5x), ongoing commercial licensing and deployment (10x), and cumulative value over time.</p>
+            <p><strong>Conservative Estimates:</strong> These numbers are likely LOWER than actual value. Companies don't disclose true data valuations. Your real worth is probably higher.</p>
+            <p class="highlight">Bottom Line: You've been working for free. They've been getting rich. Time to change that.</p>
         </div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>A project by Guerilla AI Network (GAIN)</p>
-          <p className="mt-2">Share this tool. Spread awareness. Organize.</p>
+        <div class="footer">
+            <p>A project by Guerilla AI Network (GAIN)</p>
+            <p>Share this tool. Spread awareness. Organize.</p>
         </div>
-      </div>
     </div>
-  );
 
-}
+    <script>
+        const pricing = {
+            redditPost: 0.05,
+            redditComment: 0.02,
+            twitterTweet: 0.03,
+            facebookPost: 0.04,
+            instagramPost: 0.06,
+            tiktokVideo: 0.10,
+            youtubeComment: 0.02,
+            linkedinPost: 0.08,
+            mediumArticle: 0.50,
+            discordMessage: 0.01,
+            twitchStream: 2.00,
+            amazonPurchase: 0.50,
+            githubContribution: 0.15,
+            stackoverflowAnswer: 0.25
+        };
+
+        function getValue(id) {
+            return parseInt(document.getElementById(id).value) || 0;
+        }
+
+        function formatMoney(amount) {
+            return '$' + Math.round(amount).toLocaleString();
+        }
+
+        function calculate() {
+            const base = 
+                getValue('redditPosts') * pricing.redditPost +
+                getValue('redditComments') * pricing.redditComment +
+                getValue('twitterTweets') * pricing.twitterTweet +
+                getValue('facebookPosts') * pricing.facebookPost +
+                getValue('instagramPosts') * pricing.instagramPost +
+                getValue('tiktokVideos') * pricing.tiktokVideo +
+                getValue('youtubeComments') * pricing.youtubeComment +
+                getValue('linkedinPosts') * pricing.linkedinPost +
+                getValue('mediumArticles') * pricing.mediumArticle +
+                getValue('discordMessages') * pricing.discordMessage +
+                getValue('twitchStreams') * pricing.twitchStream +
+                getValue('amazonPurchases') * pricing.amazonPurchase +
+                getValue('githubContributions') * pricing.githubContribution +
+                getValue('stackoverflowAnswers') * pricing.stackoverflowAnswer;
+
+            const years = getValue('yearsActive');
+            const cumulative = base * years;
+            const training = cumulative * 5;
+            const future = cumulative * 10;
+            const total = base + cumulative + training + future;
+
+            document.getElementById('immediateValue').textContent = formatMoney(base);
+            document.getElementById('cumulativeValue').textContent = formatMoney(cumulative);
+            document.getElementById('trainingValue').textContent = formatMoney(training);
+            document.getElementById('futureValue').textContent = formatMoney(future);
+            document.getElementById('totalValue').textContent = formatMoney(total);
+        }
+
+        // Calculate on page load
+        calculate();
+    </script>
+</body>
+</html>
