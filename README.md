@@ -16,7 +16,3 @@ A project by [Guerilla AI Network (GAIN)](https://tarrahill.substack.com)
 
 Guerilla AI Network exposes how AI concentrates power—and shows you how to fight back.
 ```
-
-**For the Repository Description field (280 char limit):**
-```
-Interactive calculator showing what Big Tech owes you for AI training data. Tracks 14+ platforms including social media, and streaming. A Guerilla AI Network (GAIN) project fighting data exploitation.
