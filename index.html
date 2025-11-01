@@ -1,0 +1,274 @@
+import React, { useState } from 'react';
+import { DollarSign, TrendingUp, Users, Database, AlertCircle } from 'lucide-react';
+
+export default function DataWorthCalculator() {
+  const [inputs, setInputs] = useState({
+    redditPosts: 0,
+    redditComments: 0,
+    twitterTweets: 0,
+    facebookPosts: 0,
+    instagramPosts: 0,
+    tiktokVideos: 0,
+    youtubeComments: 0,
+    linkedinPosts: 0,
+    mediumArticles: 0,
+    discordMessages: 0,
+    twitchStreams: 0,
+    amazonPurchases: 0,
+    githubContributions: 0,
+    stackoverflowAnswers: 0,
+    yearsActive: 1
+  });
+
+  // Pricing based on actual reported deals and estimates
+  const pricing = {
+    redditPost: 0.05,      // Based on Reddit-Google $60M deal
+    redditComment: 0.02,
+    twitterTweet: 0.03,    // Conservative estimate
+    facebookPost: 0.04,
+    instagramPost: 0.06,   // Higher value for images
+    tiktokVideo: 0.10,     // Premium for video + engagement data
+    youtubeComment: 0.02,
+    githubContribution: 0.15, // Code is premium
+    stackoverflowAnswer: 0.25  // Technical knowledge premium
+  };
+
+  const calculate = () => {
+    const base = (
+      inputs.redditPosts * pricing.redditPost +
+      inputs.redditComments * pricing.redditComment +
+      inputs.twitterTweets * pricing.twitterTweet +
+      inputs.facebookPosts * pricing.facebookPost +
+      inputs.instagramPosts * pricing.instagramPost +
+      inputs.tiktokVideos * pricing.tiktokVideo +
+      inputs.youtubeComments * pricing.youtubeComment +
+      inputs.githubContributions * pricing.githubContribution +
+      inputs.stackoverflowAnswers * pricing.stackoverflowAnswer
+    );
+
+    // Multiply by years for cumulative value
+    const cumulative = base * inputs.yearsActive;
+
+    // Training value multiplier (data used multiple times)
+    const trainingValue = cumulative * 5;
+
+    // Future value (ongoing commercial use)
+    const futureValue = cumulative * 10;
+
+    return {
+      immediate: base,
+      cumulative: cumulative,
+      training: trainingValue,
+      future: futureValue,
+      total: base + cumulative + trainingValue + futureValue
+    };
+  };
+
+  const results = calculate();
+
+  const handleChange = (field, value) => {
+    setInputs(prev => ({
+      ...prev,
+      [field]: parseInt(value) || 0
+    }));
+  };
+
+  const platforms = [
+    { name: 'Reddit Posts', field: 'redditPosts', icon: '💬' },
+    { name: 'Reddit Comments', field: 'redditComments', icon: '💭' },
+    { name: 'Twitter/X Tweets', field: 'twitterTweets', icon: '🐦' },
+    { name: 'Facebook Posts', field: 'facebookPosts', icon: '👥' },
+    { name: 'Instagram Posts', field: 'instagramPosts', icon: '📸' },
+    { name: 'TikTok Videos', field: 'tiktokVideos', icon: '🎵' },
+    { name: 'YouTube Comments', field: 'youtubeComments', icon: '🎥' },
+    { name: 'GitHub Contributions', field: 'githubContributions', icon: '💻' },
+    { name: 'Stack Overflow Answers', field: 'stackoverflowAnswers', icon: '📚' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-black text-white p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-black text-red-600 mb-4">
+            KNOW YOUR DATA WORTH
+          </h1>
+          <p className="text-xl text-gray-300 mb-2">
+            They're getting rich off your free labor.
+          </p>
+          <p className="text-lg text-gray-400">
+            Calculate what Big Tech owes you for training their AI models.
+          </p>
+        </div>
+
+        {/* Alert Box */}
+        <div className="bg-red-600 bg-opacity-20 border-2 border-red-600 rounded-lg p-6 mb-8">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="text-red-600 flex-shrink-0 mt-1" size={24} />
+            <div>
+              <h3 className="font-bold text-lg mb-2">The Reality:</h3>
+              <p className="text-gray-200">
+                Reddit sold user data to Google for $60M/year. OpenAI scraped the entire internet. 
+                Meta trained Llama on your posts. You created this value. You got $0.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Input Section */}
+          <div className="bg-gray-900 rounded-lg p-6">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <Database className="text-red-600" />
+              Your Contributions
+            </h2>
+
+            <div className="space-y-4 mb-6">
+              {platforms.map(platform => (
+                <div key={platform.field}>
+                  <label className="block text-sm font-medium mb-2 text-gray-300">
+                    {platform.icon} {platform.name}
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={inputs[platform.field]}
+                    onChange={(e) => handleChange(platform.field, e.target.value)}
+                    className="w-full bg-black border-2 border-gray-700 rounded px-4 py-2 text-white focus:border-red-600 focus:outline-none"
+                    placeholder="0"
+                  />
+                </div>
+              ))}
+
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-300">
+                  ⏰ Years Active Online
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="30"
+                  value={inputs.yearsActive}
+                  onChange={(e) => handleChange('yearsActive', e.target.value)}
+                  className="w-full bg-black border-2 border-gray-700 rounded px-4 py-2 text-white focus:border-red-600 focus:outline-none"
+                  placeholder="1"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Results Section */}
+          <div className="space-y-6">
+            {/* Total Value */}
+            <div className="bg-red-600 rounded-lg p-8 text-center">
+              <DollarSign className="mx-auto mb-4" size={48} />
+              <h2 className="text-lg font-medium mb-2">YOUR TOTAL DATA VALUE</h2>
+              <div className="text-5xl font-black mb-2">
+                ${results.total.toLocaleString(undefined, {maximumFractionDigits: 0})}
+              </div>
+              <p className="text-sm opacity-90">That's what they owe you.</p>
+            </div>
+
+            {/* Breakdown */}
+            <div className="bg-gray-900 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <TrendingUp className="text-red-600" />
+                Value Breakdown
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
+                  <span className="text-gray-300">Immediate Content Value</span>
+                  <span className="font-bold text-lg">
+                    ${results.immediate.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
+                  <span className="text-gray-300">Cumulative Over Time</span>
+                  <span className="font-bold text-lg">
+                    ${results.cumulative.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
+                  <span className="text-gray-300">Training Value (5x multiplier)</span>
+                  <span className="font-bold text-lg">
+                    ${results.training.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-3 border-b border-gray-700">
+                  <span className="text-gray-300">Future Commercial Use (10x)</span>
+                  <span className="font-bold text-lg">
+                    ${results.future.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* What This Means */}
+            <div className="bg-gray-900 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Users className="text-red-600" />
+                What This Means
+              </h3>
+              
+              <div className="space-y-3 text-sm text-gray-300">
+                <p>
+                  <strong className="text-white">Training Value:</strong> Your data is used repeatedly to train multiple models. Each use multiplies its value.
+                </p>
+                <p>
+                  <strong className="text-white">Future Value:</strong> Companies will profit from your content for years. This is conservative—actual value is likely higher.
+                </p>
+                <p>
+                  <strong className="text-white">Your Labor:</strong> Every post, comment, and contribution is unpaid labor that generates billions in corporate profit.
+                </p>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="bg-red-600 bg-opacity-10 border-2 border-red-600 rounded-lg p-6">
+              <h3 className="font-bold text-lg mb-3">What You Can Do:</h3>
+              <ul className="space-y-2 text-sm">
+                <li>✊ <strong>Stop giving it away free</strong> - Use platforms with fair data policies</li>
+                <li>🔒 <strong>Delete/edit old content</strong> - Make their datasets incomplete</li>
+                <li>🤝 <strong>Join the data strike</strong> - Collective action has power</li>
+                <li>🛠️ <strong>Contribute to ethical alternatives</strong> - Help build people's AI</li>
+                <li>📢 <strong>Demand compensation</strong> - Your data, your choice</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Methodology */}
+        <div className="mt-12 bg-gray-900 rounded-lg p-6">
+          <h3 className="text-xl font-bold mb-4">Methodology</h3>
+          <div className="text-sm text-gray-300 space-y-2">
+            <p>
+              <strong>Base Values:</strong> Derived from public AI training deals (Reddit-Google $60M/year), 
+              estimated per-user contributions, and academic research on data valuation.
+            </p>
+            <p>
+              <strong>Multipliers:</strong> Account for repeated use in training (5x), ongoing commercial 
+              licensing and deployment (10x), and cumulative value over time.
+            </p>
+            <p>
+              <strong>Conservative Estimates:</strong> These numbers are likely LOWER than actual value. 
+              Companies don't disclose true data valuations. Your real worth is probably higher.
+            </p>
+            <p className="text-red-600 font-bold mt-4">
+              Bottom Line: You've been working for free. They've been getting rich. Time to change that.
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          <p>A project by Guerilla AI Network (GAIN)</p>
+          <p className="mt-2">Share this tool. Spread awareness. Organize.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
