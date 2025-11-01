@@ -284,72 +284,72 @@
                 <h2 class="section-title">📊 Your Contributions</h2>
                 
                 <div class="input-group">
-                    <label>💬 Reddit Posts</label>
+                    <label>💬 Reddit Posts (per year, average)</label>
                     <input type="number" id="redditPosts" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>💭 Reddit Comments</label>
+                    <label>💭 Reddit Comments (per year, average)</label>
                     <input type="number" id="redditComments" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>🐦 Twitter/X Tweets</label>
+                    <label>🐦 Twitter/X Tweets (per year, average)</label>
                     <input type="number" id="twitterTweets" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>👥 Facebook Posts</label>
+                    <label>👥 Facebook Posts (per year, average)</label>
                     <input type="number" id="facebookPosts" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>📸 Instagram Posts</label>
+                    <label>📸 Instagram Posts (per year, average)</label>
                     <input type="number" id="instagramPosts" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>🎵 TikTok Videos</label>
+                    <label>🎵 TikTok Videos (per year, average)</label>
                     <input type="number" id="tiktokVideos" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>🎥 YouTube Comments</label>
+                    <label>🎥 YouTube Comments (per year, average)</label>
                     <input type="number" id="youtubeComments" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>💼 LinkedIn Posts</label>
+                    <label>💼 LinkedIn Posts (per year, average)</label>
                     <input type="number" id="linkedinPosts" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>✍️ Medium Articles</label>
+                    <label>✍️ Medium Articles (per year, average)</label>
                     <input type="number" id="mediumArticles" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>💬 Discord Messages</label>
+                    <label>💬 Discord Messages (per year, average)</label>
                     <input type="number" id="discordMessages" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>🎮 Twitch Streams (hours)</label>
+                    <label>🎮 Twitch Streams - hours (per year, average)</label>
                     <input type="number" id="twitchStreams" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>📦 Amazon Purchases</label>
+                    <label>📦 Amazon Purchases (per year, average)</label>
                     <input type="number" id="amazonPurchases" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>💻 GitHub Contributions</label>
+                    <label>💻 GitHub Contributions (per year, average)</label>
                     <input type="number" id="githubContributions" min="0" value="0" oninput="calculate()">
                 </div>
 
                 <div class="input-group">
-                    <label>📚 Stack Overflow Answers</label>
+                    <label>📚 Stack Overflow Answers (per year, average)</label>
                     <input type="number" id="stackoverflowAnswers" min="0" value="0" oninput="calculate()">
                 </div>
 
@@ -447,7 +447,8 @@
         }
 
         function calculate() {
-            const base = 
+            // Get annual averages
+            const annualBase = 
                 getValue('redditPosts') * pricing.redditPost +
                 getValue('redditComments') * pricing.redditComment +
                 getValue('twitterTweets') * pricing.twitterTweet +
@@ -464,13 +465,17 @@
                 getValue('stackoverflowAnswers') * pricing.stackoverflowAnswer;
 
             const years = getValue('yearsActive');
-            const cumulative = base * years;
-            const training = cumulative * 5;
-            const future = cumulative * 10;
-            const total = base + cumulative + training + future;
+            
+            // Calculate total contributions over all years
+            const totalContributions = annualBase * years;
+            
+            // Apply multipliers to total contributions
+            const training = totalContributions * 5;
+            const future = totalContributions * 10;
+            const total = annualBase + totalContributions + training + future;
 
-            document.getElementById('immediateValue').textContent = formatMoney(base);
-            document.getElementById('cumulativeValue').textContent = formatMoney(cumulative);
+            document.getElementById('immediateValue').textContent = formatMoney(annualBase);
+            document.getElementById('cumulativeValue').textContent = formatMoney(totalContributions);
             document.getElementById('trainingValue').textContent = formatMoney(training);
             document.getElementById('futureValue').textContent = formatMoney(future);
             document.getElementById('totalValue').textContent = formatMoney(total);
@@ -481,4 +486,6 @@
     </script>
 </body>
 </html>
+</html>
+
 
